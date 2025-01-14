@@ -6,7 +6,7 @@ from config import YOUTUBE_IMG_URL
 
 # Load fonts once (optimization)
 arial = ImageFont.truetype("PURVIMUSIC/assets/assets/font2.ttf", 30)
-font = ImageFont.truetype("PURVIMUSIC/assets/asset/font.ttf", 30)
+font = ImageFont.truetype("PURVIMUSIC/assets/assets/font.ttf", 30)
 title_font = ImageFont.truetype("PURVIMUSIC/assets/assetsfont3.ttf", 45)
 
 def changeImageSize(maxWidth, maxHeight, image):
