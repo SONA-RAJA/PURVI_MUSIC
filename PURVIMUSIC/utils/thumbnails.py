@@ -1,5 +1,5 @@
-import os, re, random, aiofiles, aiohttp, math
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+import os, re, aiofiles, aiohttp
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from youtubesearchpython.__future__ import VideosSearch
 from PURVIMUSIC import app
 from config import YOUTUBE_IMG_URL
@@ -25,31 +25,13 @@ def truncate(text):
             text2 += " " + word
     return [text1.strip(), text2.strip()]
 
-def generate_light_dark_color():
-    return (random.randint(100, 200), random.randint(100, 200), random.randint(100, 200))
-
-def create_rgb_neon_circle(image, center, radius, border_width, steps=30):
-    draw = ImageDraw.Draw(image)
-    for step in range(steps):
-        red = int((math.sin(step / steps * math.pi * 2) * 127) + 128)
-        green = int((math.sin((step / steps * math.pi * 2) + (math.pi / 3)) * 127) + 128)
-        blue = 0
-        draw.ellipse([
-            center[0] - radius - border_width + step,
-            center[1] - radius - border_width + step,
-            center[0] + radius + border_width - step,
-            center[1] + radius + border_width - step
-        ], outline=(red, green, blue), width=border_width)
-    return image
-
-def crop_center_circle(img, output_size, border, crop_scale=1.5):
+def crop_center_circle(img, output_size, border):
     half_width, half_height = img.size[0] / 2, img.size[1] / 2
-    larger_size = int(output_size * crop_scale)
     img = img.crop((
-        half_width - larger_size / 2,
-        half_height - larger_size / 2,
-        half_width + larger_size / 2,
-        half_height + larger_size / 2
+        half_width - output_size / 2,
+        half_height - output_size / 2,
+        half_width + output_size / 2,
+        half_height + output_size / 2
     ))
     img = img.resize((output_size - 2 * border, output_size - 2 * border))
     final_img = Image.new("RGBA", (output_size, output_size), "white")
@@ -57,13 +39,9 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     draw_main = ImageDraw.Draw(mask_main)
     draw_main.ellipse((0, 0, output_size - 2 * border, output_size - 2 * border), fill=255)
     final_img.paste(img, (border, border), mask_main)
-    mask_border = Image.new("L", (output_size, output_size), 0)
-    draw_border = ImageDraw.Draw(mask_border)
-    draw_border.ellipse((0, 0, output_size, output_size), fill=255)
-    result = Image.composite(final_img, Image.new("RGBA", final_img.size, (0, 0, 0, 0)), mask_border)
-    center = (output_size // 2, output_size // 2)
-    radius = (output_size - 2 * border) // 2
-    return create_rgb_neon_circle(result, center, radius, 10)
+    draw_border = ImageDraw.Draw(final_img)
+    draw_border.ellipse((0, 0, output_size, output_size), outline="white", width=20)
+    return final_img
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
@@ -97,7 +75,7 @@ async def get_thumb(videoid):
         draw = ImageDraw.Draw(background)
         circle_thumbnail = crop_center_circle(youtube, 400, 20)
         circle_thumbnail = circle_thumbnail.resize((400, 400))
-        background.paste(circle_thumbnail, (120, 160), circle_thumbnail) 
+        background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
         title1 = truncate(title)
         draw.text((565, 180), title1[0], fill=(255, 255, 255), font=title_font)
         draw.text((565, 230), title1[1], fill=(255, 255, 255), font=title_font)
@@ -112,12 +90,8 @@ async def get_thumb(videoid):
         draw.text((1080, 400), duration, (255, 255, 255), font=arial)
         play_icons = Image.open("PURVIMUSIC/assets/assets/play_icons.png").resize((580, 62))
         background.paste(play_icons, (565, 450), play_icons)
-        stroke_width = 15
-        stroke_color = generate_light_dark_color()
-        stroke_image = Image.new("RGBA", (1280 + 2 * stroke_width, 720 + 2 * stroke_width), stroke_color)
-        stroke_image.paste(background, (stroke_width, stroke_width))
         os.remove(f"cache/thumb{videoid}.png")
-        stroke_image.save(f"cache/{videoid}_v4.png")
+        background.save(f"cache/{videoid}_v4.png")
         return f"cache/{videoid}_v4.png"
     except Exception as e:
         print(f"Error processing thumbnail: {e}")
