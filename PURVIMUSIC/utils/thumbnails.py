@@ -128,11 +128,24 @@ async def get_thumb(videoid):
     line_length = 580  
 
 
+    # Assuming image_width is the width of your image
+    image_width = 800  # Replace with your actual image width
+
+# Function to calculate the width of the text
+def get_text_width(text, font):
+    return draw.textsize(text, font=font)[0]
+
     # Add text and other details
     title1 = truncate(title)
-    draw.text((565, 180), title1[0], fill=(255, 255, 255), font=title_font)
-    draw.text((565, 230), title1[1], fill=(255, 255, 255), font=title_font)
-    draw.text((565, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
+
+    # Calculate x position for right alignment
+    x_position_title1_0 = image_width - get_text_width(title1[0], title_font) - 10  # 10 pixels padding
+    x_position_title1_1 = image_width - get_text_width(title1[1], title_font) - 10
+    x_position_channel_views = image_width - get_text_width(f"{channel}  |  {views[:23]}", arial) - 10
+
+    draw.text((x_position_title1_0, 180), title1[0], fill=(255, 255, 255), font=title_font)
+    draw.text((x_position_title1_1, 230), title1[1], fill=(255, 255, 255), font=title_font)
+    draw.text((x_position_channel_views, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
     draw.text((10, 10), "ERA VIBES", fill="yellow", font=font)
 
     
