@@ -108,11 +108,7 @@ async def get_thumb(videoid):
         background = enhancer.enhance(0.6)
         draw = ImageDraw.Draw(background)
 
-        # Add circular thumbnail with neon effect
-        circle_thumbnail = crop_center_circle(youtube, 400, 20)
-        circle_thumbnail = circle_thumbnail.resize((400, 400))
-        background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
-
+        
         # Add text and other details
         title1 = truncate(title)
         draw.text((565, 180), title1[0], fill=(255, 255, 255), font=title_font)
