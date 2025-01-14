@@ -5,9 +5,9 @@ from PURVIMUSIC import app
 from config import YOUTUBE_IMG_URL
 
 # Load fonts once (optimization)
-arial = ImageFont.truetype("PURVIMUSIC/assets/font2.ttf", 30)
-font = ImageFont.truetype("PURVIMUSIC/assets/font.ttf", 30)
-title_font = ImageFont.truetype("PURVIMUSIC/assets/font3.ttf", 45)
+arial = ImageFont.truetype("PURVIMUSIC/assets/assets/font2.ttf", 30)
+font = ImageFont.truetype("PURVIMUSIC/assets/asset/font.ttf", 30)
+title_font = ImageFont.truetype("PURVIMUSIC/assets/assetsfont3.ttf", 45)
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -130,7 +130,7 @@ async def get_thumb(videoid):
         draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
         # Add play icons
-        play_icons = Image.open("PURVIMUSIC/assets/play_icons.png").resize((580, 62))
+        play_icons = Image.open("PURVIMUSIC/assets/assets/play_icons.png").resize((580, 62))
         background.paste(play_icons, (565, 450), play_icons)
 
         # Add stroke effect
