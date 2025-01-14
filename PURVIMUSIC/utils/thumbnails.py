@@ -130,10 +130,10 @@ async def get_thumb(videoid):
 
     # Add text and other details
     title1 = truncate(title)
-        draw.text((565, 180), title1[0], fill=(255, 255, 255), font=title_font)
-        draw.text((565, 230), title1[1], fill=(255, 255, 255), font=title_font)
-        draw.text((565, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
-        draw.text((10, 10), "ERA VIBES", fill="yellow", font=font)
+    draw.text((565, 180), title1[0], fill=(255, 255, 255), font=title_font)
+    draw.text((565, 230), title1[1], fill=(255, 255, 255), font=title_font)
+    draw.text((565, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
+    draw.text((10, 10), "ERA VIBES", fill="yellow", font=font)
 
     
     red_length = int(line_length * 0.6)
